@@ -10,8 +10,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
@@ -21,6 +24,8 @@ public class BookingService {
 
     @Autowired
     private FlightClient flightClient;
+
+
 
     @Transactional
     public Booking createBooking(Long flightId, Long userId, Integer passengers) {
@@ -47,14 +52,22 @@ public class BookingService {
         booking.setDepartureTime(flight.getDepartureTime());
 
         //3. Update flight inventory
-        flightClient.updateSeats(flightId, flight.getSeatsAvailable() - passengers);
+        flightClient.updateSeats(flightId, (flight.getSeatsAvailable()) - passengers);
 
         return repo.save(booking);
     }
 
 
     public List<Booking> getUserBookings(Long userId) {
-        return repo.findByUserId(userId);
+        List<Booking> allBookings = repo.findByUserId(userId);
+
+        // Filter upcoming bookings only
+        return allBookings.stream()
+                .filter(booking -> booking.getDepartureTime() != null &&
+                        booking.getDepartureTime().isAfter(LocalDateTime.now()))
+                .collect(Collectors.toList());
+
+
     }
 
     @Transactional

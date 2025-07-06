@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.http.HttpMethod;
+
 
 @Configuration
 @EnableWebFluxSecurity
@@ -23,6 +25,7 @@ public class SecurityConfig
                         .pathMatchers("/auth/register",
                                 "/auth/users",
                                 "/auth/login").permitAll()
+                        .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .pathMatchers("/flight/**").hasRole("ADMIN")
                         .pathMatchers("/booking/**").hasAnyRole("ADMIN","USER")
                    //     .pathMatchers("/guest/**").hasRole("OWNER")

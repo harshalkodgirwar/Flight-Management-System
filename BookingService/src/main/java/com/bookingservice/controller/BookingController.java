@@ -26,7 +26,7 @@ public class BookingController {
         return bookingService.createBooking(bookingdto.getFlightId(), bookingdto.getUserId(), bookingdto.getPassengerCount());
     }
 
-    @GetMapping("all")
+    @GetMapping("/all")
     public List<Flight> getAllFlights() {
         return bookingService.getAllFlights();
     }

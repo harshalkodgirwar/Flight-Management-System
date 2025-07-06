@@ -1,11 +1,16 @@
 package com.authservice.controller;
 
 import com.authservice.model.User;
+import com.authservice.repository.AuthRepo;
 import com.authservice.service.AuthService;
+import com.authservice.service.JwtService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -18,6 +23,8 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+
+
       @PostMapping("/register")
       public User register(@Valid @RequestBody User user) {
 
@@ -25,11 +32,16 @@ public class AuthController {
       }
 
       @PostMapping("/login")
-      public String login(@Valid @RequestBody User user) {
+      public ResponseEntity<?> login(@Valid @RequestBody User user) {
 
-          return authService.verify(user);
+          String token = authService.verify(user);
+          return ResponseEntity.ok(Map.of("token", token));
 
       }
+
+
+
+
 
 
     @GetMapping("/view")

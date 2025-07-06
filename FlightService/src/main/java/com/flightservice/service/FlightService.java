@@ -76,7 +76,7 @@ public class FlightService {
         Flight flight = flightRepo.findById(flightId)
                 .orElseThrow(() -> new FlightNotFoundException("Flight not found with id: " + flightId));
 
-        int newSeatCount = flight.getSeatsAvailable() + seatChange;
+        int newSeatCount = seatChange;
 
         if (newSeatCount < 0) {
             throw new SeatUpdateException("Cannot reduce seats below zero");
